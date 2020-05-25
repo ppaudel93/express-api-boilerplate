@@ -1,5 +1,5 @@
 {
-  "name": "inventory-system-api",
+  "name": "express-api-boilerplate",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,16 +9,21 @@
     "lint": "./node_modules/.bin/eslint --fix ./src",
     "start": "DEBUG=express:* nodemon --inspect --exec babel-node ./src/index.js",
     "generate": "babel-node ./src/utils/generator.js",
-    "console": "babel-node --experimental-repl-await ./src/utils/console.js",
+    "console": "NODE_ENV=development babel-node --experimental-repl-await ./src/utils/console.js",
     "c": "npm run console"
   },
   "keywords": [],
   "author": "Prayog <ppaudel93@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "app-root-path": "^3.0.0",
+    "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "chalk": "^4.0.0",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
+    "js-yaml": "^3.13.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.6",
     "pluralize": "^8.0.0"
@@ -28,7 +33,9 @@
     "@babel/core": "^7.9.0",
     "@babel/node": "^7.8.7",
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
+    "@babel/plugin-syntax-top-level-await": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
+    "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
     "nodemon": "^2.0.2"
   }

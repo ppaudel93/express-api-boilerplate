@@ -3,6 +3,7 @@
     "@babel/env"
   ],
   "plugins": [
-    "@babel/plugin-proposal-optional-chaining"
+    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-syntax-top-level-await"
   ]
 }
