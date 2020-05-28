@@ -4,7 +4,7 @@ import authenticateUser from '../utils/authenticate-user'
 const route = Router()
 
 route.use(async (req, res, next) => {
-  const authenticator = await authenticateUser(req.cookies.login_token, res)
+  const authenticator = await authenticateUser(req.cookies.login_token)
   if (authenticator.type === 'success') {
     next()
   } else {

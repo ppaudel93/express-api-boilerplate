@@ -19,24 +19,46 @@ const canFileBeGenerated = type => {
 }
 
 const modelTemplate = className => `
-import Model from './Model'
+import mongoose from 'mongoose'
+import { defaultSchema } from './_default'
 
-export default class ${upperFirst(camelCase(className))} extends Model {
-  constructor(params = {}) {
-    super(params)
-  }
-}
+const schema = new mongoose.Schema({
+  name: { type: string, required: true, trim: true }
+})
+
+const ${upperFirst(camelCase(className))} = mongoose.model('${upperFirst(camelCase(className))}', schema)
+
+export default ${upperFirst(camelCase(className))}
 `
 
 const controllerTemplate = className => `
-import Controller from './controller'
+import { Router } from 'express'
+import authenticateUser from '../utils/authenticate-user'
 
-export default class ${upperFirst(camelCase(className))} extends Controller {
-  constructor(params = {}) {
-    super(params)
+const route = Router()
+
+route.use(async (req, res, next) => {
+  const authenticator = await authenticateUser(req.cookies.login_token)
+  if (authenticator.type === 'success') {
+    next()
+  } else {
+    res.status(401).jsonp({ error: 'not logged in' })
   }
+})
 
-}
+route.get('/', (req, res) => {
+  //index
+})
+
+route.get('/:id', (req, res) => {
+  //show
+})
+
+route.post('/', (req, res) => {
+  //create
+})
+
+export default route
 `
 
 const templateMapper = {
