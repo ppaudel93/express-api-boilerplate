@@ -19,23 +19,22 @@ route.post('/', (req, res) => {
   product.save().then(async () => {
     currentUser.products.push(product)
     await currentUser.save()
-    console.log(chalk.green('Product created'))
     res.status(200).jsonp({ data: product.populate('createdBy') })
   }).catch(err => {
-    console.log(chalk.red(err))
+    console.log(chalk.bold.red(err))
     res.status(422).jsonp(err)
   })
 })
 
 route.get('/', async (_req, res) => {
   const products = await Product.find()
-  res.status(200).jsonp(serializeIndex(products))
+  res.status(200).jsonp({ data: serializeIndex(products) })
 })
 
 route.get('/:id', async (req, res) => {
   const { id } = req.params
-  product = await Product.findOne({ id })
-  res.status(200).jsonp(product)
+  const product = await Product.findOne({ _id: id }).populate('createdBy', '_id, name')
+  res.status(200).jsonp({ data: await serializeShow(product) })
 })
 
 const serializeIndex = products => {
@@ -47,5 +46,14 @@ const serializeIndex = products => {
     createdAt: product.createdAt
   }))
 }
+
+const serializeShow = async ({ _id, qty, price, name, createdAt, createdBy }) => ({
+  _id,
+  qty,
+  price,
+  name,
+  createdAt,
+  createdBy
+})
 
 export default route

@@ -2,13 +2,10 @@ import express from 'express'
 import * as models from './models'
 import chalk from 'chalk'
 import controllers from './controllers'
-import connectToDb from './utils/connect-to-db'
 import { defaultSchema } from './models/_default'
 import bodyParser from 'body-parser'
 import authenticateUser from './utils/authenticate-user'
 import cookieParser from 'cookie-parser'
-
-connectToDb()
 
 const app = express()
 

@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { kebabCase, camelCase, upperFirst } from 'lodash'
 import pluralize from 'pluralize'
+import chalk from 'chalk'
 
 const GENERATABLE_TYPES = ['model', 'controller']
 
@@ -81,10 +82,10 @@ for (let i = 1; i < args.length; i++) {
           templateMapper['controller'](filename(args[i], 'controller')),
           function (err) {
             if (err) throw err
-            console.log(`${args[i]} controller generated successfully`)
+            console.log(chalk.bold.green(`${args[i]} controller generated successfully`))
           }
         )
-      console.log(`${args[i]} ${args[0]} generated successfully`)
+      console.log(chalk.bold.green(`${args[i]} ${args[0]} generated successfully`))
     }
   )
 }
