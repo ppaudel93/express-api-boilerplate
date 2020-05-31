@@ -23,11 +23,14 @@ afterAll(async () => {
 
 describe('Product test', () => {
   it('should create a new product', async done => {
+    const numberOfProductsBefore = await Product.find().countDocuments()
     const product = await request(app).post('/products')
       .send(DUMMY_PRODUCT)
       .set('cookie', loginCookie)
       .expect(200)
     const { body: { data }} = product
+    const numberOfProductsAfter = await Product.find().countDocuments()
+    expect(numberOfProductsAfter).toBe(numberOfProductsBefore + 1)
     expect(data.name).toBe(DUMMY_PRODUCT.name)
     expect(data.qty).toBe(DUMMY_PRODUCT.qty)
     expect(data.price).toBe(DUMMY_PRODUCT.price)
