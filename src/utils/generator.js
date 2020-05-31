@@ -1,16 +1,26 @@
 import fs from 'fs'
-import { kebabCase, camelCase, upperFirst } from 'lodash'
+import { camelCase, upperFirst, lowerCase } from 'lodash'
 import pluralize from 'pluralize'
 import chalk from 'chalk'
 
 const GENERATABLE_TYPES = ['model', 'controller']
 
+const TYPE_TO_FILES = {
+  model: ['model', 'controller', 'test'],
+  controller: ['controller', 'test'],
+}
+
 const filename = (name, type) => {
-  if (type == GENERATABLE_TYPES[0])
-    return name
-  return kebabCase(
-    `${pluralize(name)}_${type}`
-    )
+  switch(type) {
+    case GENERATABLE_TYPES[0]:
+      return name
+    case GENERATABLE_TYPES[1]:
+      return `${lowerCase(pluralize(name))}-controller`
+    case 'test':
+      return `${lowerCase(pluralize(name))}-controller.test`
+    default:
+      return `${lowerCase(pluralize(name))}-${type}`
+  }
 }
 
 const args = process.argv.slice(2)
@@ -32,7 +42,7 @@ const ${upperFirst(camelCase(className))} = mongoose.model('${upperFirst(camelCa
 export default ${upperFirst(camelCase(className))}
 `
 
-const controllerTemplate = className => `
+const controllerTemplate = () => `
 import { Router } from 'express'
 import authenticateUser from '../utils/authenticate-user'
 
@@ -62,30 +72,42 @@ route.post('/', (req, res) => {
 export default route
 `
 
+const testTemplate = () => `
+import 'regenerator-runtime'
+import request from 'supertest'
+import app from '../app'
+import { setUpDatabase, tearDownDatabase, createUserAndLogin } from './utils'
+
+let loginCookie = ''
+
+beforeAll(async () => {
+  await setUpDatabase()
+  loginCookie = await createUserAndLogin()
+})
+
+afterAll(async () => {
+  await tearDownDatabase()
+})
+`
+
 const templateMapper = {
   model: modelTemplate,
   controller: controllerTemplate,
+  test: testTemplate
 }
 
 if (!canFileBeGenerated(args[0]))
   throw `${args[0]} cannot be generated`
 
 for (let i = 1; i < args.length; i++) {
-  fs.writeFile(
-    `./src/${pluralize(args[0])}/${filename(args[i], args[0])}.js`,
-    templateMapper[args[0]](filename(args[i], args[0])),
-    function (err) {
-      if (err) throw err
-      if (args[0] == GENERATABLE_TYPES[0])
-        fs.writeFile(
-          `./src/controllers/${filename(args[i], 'controller')}.js`,
-          templateMapper['controller'](filename(args[i], 'controller')),
-          function (err) {
-            if (err) throw err
-            console.log(chalk.bold.green(`${args[i]} controller generated successfully`))
-          }
-        )
-      console.log(chalk.bold.green(`${args[i]} ${args[0]} generated successfully`))
-    }
-  )
+  TYPE_TO_FILES[args[0]].forEach(fileType => {
+    fs.writeFile(
+      `./src/${pluralize(fileType)}/${filename(args[i], fileType)}.js`,
+      templateMapper[fileType](filename(args[i], fileType)),
+      function (err) {
+        if (err) throw err
+      }
+    )
+  })
+  console.log(chalk.bold.green('files generated successfully'))
 }

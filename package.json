@@ -8,6 +8,7 @@
     "lint": "./node_modules/.bin/eslint --fix ./src",
     "start": "DEBUG=express:* nodemon --inspect --exec babel-node ./src/index.js",
     "generate": "babel-node ./src/utils/generator.js",
+    "g": "babel-node ./src/utils/generator.js",
     "console": "NODE_ENV=development babel-node --experimental-repl-await ./src/utils/console.js",
     "c": "npm run console",
     "test": "jest --detectOpenHandles"

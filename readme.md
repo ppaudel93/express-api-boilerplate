@@ -1,5 +1,10 @@
 **Express Boilerplate**  
 
+*Built on:*  
+* nodeJS
+* Express
+* MongoDB
+
 *Features:*  
   * A generator to generate models and controllers. Use ```npm run generate model YOUR_MODEL_NAME``` to generate a model and its corresponding controller. ```npm run generate model Test``` will generate a ```Test.js``` model and a ```tests-controller.js``` controller. ```npm run g``` is an alias for ```npm run generate```
   * A console where all models are available. Use this to verify data on the database and run model methods. Use ```npm run console``` to start the console. ```npm run c``` is an alias for ```npm run console```
