@@ -24,7 +24,7 @@
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "js-yaml": "^3.13.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.6",
     "pluralize": "^8.0.0",
